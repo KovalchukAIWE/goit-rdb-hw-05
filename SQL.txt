@@ -1,0 +1,33 @@
+Task 1.
+select *, 
+(select customer_id from hw3.orders where id = od.order_id) as customer_id from hw3.order_details od;
+
+Task 2.
+select * from hw3.order_details where order_id in (select id from hw3.orders where shipper_id = 3);
+
+Task 3.
+select order_id, avg(quantity) as avg_quantity
+from (select * from hw3.order_details where quantity > 10) as temp_table
+group by order_id;
+
+Task 4.
+with temp as (select * from hw3.order_details where quantity > 10)
+select order_id,
+avg(quantity) as avg_quantity from temp group by order_id;
+
+Task 5.
+use hw3;
+
+drop function if exists DivideFloats;
+DELIMITER //
+create function DivideFloats(dividend float, divisor float)
+returns float
+deterministic
+begin
+    declare result float;
+    set result = dividend / divisor;
+    return result;
+end //
+DELIMITER ;
+select *,
+DivideFloats(quantity, 2.0) as divided_quantity from hw3.order_details;
